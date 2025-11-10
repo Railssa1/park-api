@@ -28,7 +28,7 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false, length = 25)
     private Role role;
 
-    @Column(name = "createdAt", nullable = false)
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
     @Column(name = "modifiedAt")
