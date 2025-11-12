@@ -18,12 +18,13 @@ import park_api.service.UserService;
 import park_api.web.dto.UserCreateDto;
 import park_api.web.dto.UserResponseDto;
 import park_api.web.dto.mapper.UserMapper;
+import park_api.web.dto.mapper.UserPasswordDto;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
-    
+
     private final UserService userService;
 
     @PostMapping
@@ -33,20 +34,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User user = userService.getById(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserMapper.toDto(user));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user) {
-        User userUpdated = userService.updatePassword(id, user.getPassword());
-        return ResponseEntity.ok(userUpdated);
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto userPasswordDto) {
+        userService.updatePassword(
+                id, userPasswordDto.getCurrentPassword(),
+                userPasswordDto.getNewPassword(),
+                userPasswordDto.getConfirmPassword());
+        return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping()
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserResponseDto>> getAll() {
         List<User> users = userService.getAll();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(UserMapper.toListDto(users));
     }
 }
