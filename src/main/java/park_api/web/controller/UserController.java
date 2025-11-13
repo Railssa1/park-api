@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import park_api.entity.User;
 import park_api.service.UserService;
 import park_api.web.dto.UserCreateDto;
+import park_api.web.dto.UserPasswordDto;
 import park_api.web.dto.UserResponseDto;
 import park_api.web.dto.mapper.UserMapper;
-import park_api.web.dto.mapper.UserPasswordDto;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -28,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto userCreateDto) {
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {
         User userCreated = userService.create(UserMapper.toUser(userCreateDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(userCreated));
     }
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto userPasswordDto) {
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto userPasswordDto) {
         userService.updatePassword(
                 id, userPasswordDto.getCurrentPassword(),
                 userPasswordDto.getNewPassword(),
