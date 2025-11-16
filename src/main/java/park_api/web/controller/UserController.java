@@ -2,7 +2,6 @@ package park_api.web.controller;
 
 import java.util.List;
 
-import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +26,7 @@ import park_api.web.dto.UserCreateDto;
 import park_api.web.dto.UserPasswordDto;
 import park_api.web.dto.UserResponseDto;
 import park_api.web.dto.mapper.UserMapper;
+import park_api.web.exception.ErrorMessage;
 
 @Tag(name = "users", description = "Contém todas as operações relativas aos recursos para cadastro, edição e leitura de um usuário")
 @RestController

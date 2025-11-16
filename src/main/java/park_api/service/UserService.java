@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import park_api.entity.User;
+import park_api.exception.EntityNotFoundException;
+import park_api.exception.UsernameUniqueViolationException;
+import park_api.exception.PasswordInvalidException;
 import park_api.repository.UserRepository;
 
 @Service
@@ -17,24 +20,28 @@ public class UserService {
 
     @Transactional
     public User create(User user) {
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new UsernameUniqueViolationException(String.format("Username {%s} já cadastrado", user.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado"));
+                () -> new EntityNotFoundException(String.format("Usuário id=%s não encontrado", id)));
     }
 
     @Transactional()
     public User updatePassword(Long id, String currentPassword, String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {
-            throw new RuntimeException("Nova senha não confere com a senha confirmada");
+            throw new PasswordInvalidException("Nova senha não confere com a senha confirmada");
         }
 
         User user = getById(id);
         if (!user.getPassword().equals(currentPassword)) {
-            throw new RuntimeException("Sua senha não confere");
+            throw new PasswordInvalidException("Sua senha não confere");
         }
         
         user.setPassword(newPassword);
