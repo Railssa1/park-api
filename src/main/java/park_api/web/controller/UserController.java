@@ -124,6 +124,14 @@ public class UserController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorMessage.class)
                 )
+            ),
+            @ApiResponse(
+                responseCode = "422", 
+                description = "Campos inválidos ou mal formatado", 
+                content = @Content(
+                    mediaType = "application/json", 
+                    schema = @Schema(implementation = ErrorMessage.class)
+                )
             )
         }
     )

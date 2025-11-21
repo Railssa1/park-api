@@ -40,13 +40,24 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(PasswordInvalidException.class)
-    public ResponseEntity<ErrorMessage> entityNotFoundException(
+    public ResponseEntity<ErrorMessage> passwordInvalidException(
             PasswordInvalidException ex,
-            HttpServletRequest request) {
-        log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+                    HttpServletRequest request) {
+            log.error("Api Error - ", ex);
+            return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+    
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundException(
+                    EntityNotFoundException ex,
+                    HttpServletRequest request) {
+            log.error("Api Error - ", ex);
+            return ResponseEntity
+                            .status(HttpStatus.NOT_FOUND)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 }
